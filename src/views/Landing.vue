@@ -6,7 +6,7 @@
           Premium Beans
         </h1>
         <p>Welcome, here you can buy the most premium beans.</p>
-        <h3>
+        <h3 v-if="beanOfTheDay !== null">
           You can also check our
           <span class="landing__today-bean" @click="showBeanOfTheDay()"
             >bean of the day</span
@@ -14,11 +14,16 @@
         </h3>
       </header>
     </section>
-    <BeanOfTheDay :isShow="showBean" v-on:closeAdvert="closeAdvert" />
+    <BeanOfTheDay
+      :bean="beanOfTheDay"
+      :isShow="showBean"
+      v-on:closeAdvert="closeAdvert"
+    />
   </main>
 </template>
 
 <script>
+import axios from "axios";
 const BeanOfTheDay = () => import("@/components/BeanOfTheDay.vue");
 
 export default {
@@ -28,15 +33,28 @@ export default {
   data() {
     return {
       showBean: false,
+      beanOfTheDay: null,
     };
   },
   methods: {
     showBeanOfTheDay() {
-      this.showBean = !this.showBean;
+      if (this.beanOfTheDay != null) this.showBean = !this.showBean;
     },
     closeAdvert() {
       this.showBean = false;
     },
+  },
+  async mounted() {
+    const today = new Date();
+    this.beanOfTheDay = null;
+
+    const res = await axios.get(
+      "https://cf3febacfb3d.eu.ngrok.io/api/beanadvert",
+      { params: { date: today } }
+    );
+
+    const beanOfToday = res.data;
+    if (beanOfToday != null) this.beanOfTheDay = beanOfToday;
   },
 };
 </script>

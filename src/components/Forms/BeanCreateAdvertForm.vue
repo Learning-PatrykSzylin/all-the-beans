@@ -1,6 +1,6 @@
 <template>
   <form
-    @submit.prevent="submitForm"
+    @submit.prevent="AddAdvert"
     ref="form"
     action="postUrl"
     method="post"
@@ -8,7 +8,7 @@
   >
     <h1>Selected date {{ date }}</h1>
 
-    <div v-if="selectedBean !== -1">
+    <div v-if="selectedBeanId !== -1">
       <h1>Selected Bean:</h1>
       <h2>{{ GetSelectedBean }}</h2>
     </div>
@@ -28,6 +28,8 @@
         <date-picker v-model="date"></date-picker>
       </li>
     </ul>
+
+    <input type="submit" value="Submit " />
   </form>
 </template>
 
@@ -47,8 +49,22 @@ export default {
       return this.availableBeans.find((x) => x.beanId == this.selectedBeanId);
     },
   },
+  methods: {
+    AddAdvert() {
+      axios
+        .post("https://cf3febacfb3d.eu.ngrok.io/api/beanadvert", {
+          beanId: this.selectedBeanId,
+          date: this.date,
+        })
+        .then(() => {
+          console.log("GIHIIH");
+        });
+    },
+  },
   async mounted() {
-    const response = await axios.get("https://772547025b40.ngrok.io/api/beans");
+    const response = await axios.get(
+      "https://cf3febacfb3d.eu.ngrok.io/api/beans"
+    );
 
     this.availableBeans = response.data;
 

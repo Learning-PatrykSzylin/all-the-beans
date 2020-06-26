@@ -7,9 +7,9 @@
       </h1>
     </section>
 
-    <section class="bean__item">
+    <section class="bean__item" v-if="bean != null">
       <header>
-        <img :src="bean.image" alt="" />
+        <img :src="bean.imageUrl" alt="" />
       </header>
       <section>
         <h2 style="margin: 0;">{{ bean.name }}</h2>
@@ -38,16 +38,16 @@ export default {
       type: Boolean,
       default: false,
     },
+    bean: {
+      costPer100g: 0,
+      name: "",
+      aroma: "",
+      colour: "",
+      imageUrl: "",
+    },
   },
   data() {
     return {
-      bean: {
-        costPer100g: 4.99,
-        name: "Black Beans",
-        aroma: "Nice smell",
-        colour: "Black",
-        image: "/blackbeans.jpg",
-      },
       hideTimeout: 4000, //in ms
     };
   },
