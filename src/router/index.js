@@ -2,10 +2,16 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import BeanCreate from "../views/BeanCreate.vue";
 import BeanCreateAdvert from "../views/BeanCreateAdvert.vue";
+import Landing from "../views/Landing.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
+  {
+    path: "/",
+    name: "Landing",
+    component: Landing,
+  },
   {
     path: "/admin",
     name: "Admin",
