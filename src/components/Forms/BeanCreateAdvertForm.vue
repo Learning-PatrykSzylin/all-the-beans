@@ -15,7 +15,7 @@
 
           <li
             v-for="(bean, idx) in availableBeans"
-            :key="bean.beanId"
+            :key="idx"
             :data-beanIdx="idx"
             @click="SelectBean(idx)"
           >
@@ -75,8 +75,6 @@ export default {
   methods: {
     // eslint-disable-next-line no-unused-vars
     SelectBean(idx) {
-      this.selectedBean.beanId = -1;
-
       const beans = document.querySelectorAll("[data-beanIdx]");
 
       // Reset selection before selecting specific element
@@ -94,9 +92,6 @@ export default {
 
       selectedBean.classList.add("selected");
       this.selectedBean = this.availableBeans[idx];
-      console.log("beans", this.availableBeans);
-
-      this.lastClickedIdx = idx;
     },
     AddAdvert() {
       axios
@@ -107,7 +102,9 @@ export default {
         .then(() => {
           this.$root.$emit("open-toast", {
             title: "New advert confirmation",
-            message: `Created an advert for ${this.selectedBean.name}. This advert will show on ${this.date}`,
+            message: `Created an advert for ${
+              this.selectedBean.name
+            }. This advert will show on ${this.date.toDateString()}`,
           });
         });
     },
