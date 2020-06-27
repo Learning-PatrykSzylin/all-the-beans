@@ -4,6 +4,13 @@
       <div class="bean-picker">
         <h1>Pick a bean to advertise</h1>
         <ul class="body__content">
+          <font-awesome-icon
+            id="icon--loading"
+            :icon="['fas', 'spinner']"
+            v-bind:style="iconStyle"
+            v-if="isLoading"
+          />
+
           <li
             v-for="(bean, idx) in availableBeans"
             :key="bean.beanId"
@@ -39,6 +46,11 @@ export default {
       date: null,
       availableBeans: [],
       selectedBeanId: -1,
+      isLoading: true,
+      iconStyle: {
+        transform: "rotateZ(180deg)",
+        color: "hotpink",
+      },
     };
   },
   methods: {
@@ -72,8 +84,24 @@ export default {
           console.log("Added advert");
         });
     },
+    // This function is called when component loads and spins the loading icon
+    // ref: mounted()
+    Loading() {
+      // eslint-disable-next-line no-unused-vars
+      const loadingIcon = document.getElementById("icon--loading");
+
+      // Rotate the icon
+      // TODO: Extract to an util function
+      let rotation = 0;
+      setInterval(() => {
+        loadingIcon.style.transform = `rotateZ(${rotation}deg)`;
+        rotation += 1;
+      }, 0.01);
+    },
   },
   async mounted() {
+    this.Loading();
+
     let response = null;
 
     try {
@@ -85,10 +113,10 @@ export default {
       // Would post to real database for storing logs
       console.log("[BeanCreateAdvertForm] - Error... ", err);
     } finally {
-      console.log("DATA");
-
-      if (response != null && response != undefined)
+      if (response != null && response != undefined) {
         this.availableBeans = response.data;
+        this.isLoading = false;
+      }
     }
   },
 };
@@ -101,7 +129,17 @@ $hotpink: #ff69b4;
 
   &__content {
     margin-top: 2rem;
+    position: relative;
   }
+}
+
+#icon--loading {
+  width: 10rem;
+  height: 10rem;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
 
 #advert-form {
