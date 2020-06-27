@@ -43,7 +43,7 @@
         />
       </li>
     </ul>
-    <input type="submit" value="Submit" />
+    <input type="submit" value="Add Bean" />
   </form>
 </template>
 

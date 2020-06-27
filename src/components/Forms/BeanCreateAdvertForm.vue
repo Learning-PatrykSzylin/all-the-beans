@@ -32,7 +32,7 @@
       </div>
     </section>
 
-    <input type="submit" value="Submit" />
+    <input type="submit" value="Add Advert" />
   </form>
 </template>
 
