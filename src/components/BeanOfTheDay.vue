@@ -1,7 +1,7 @@
 <template>
   <div class="bean__item-container" :class="{ show: isShow }">
     <section>
-      <h1>
+      <h1 class="advert__title">
         <font-awesome-icon class="icon--inline" :icon="['fas', 'star']" />
         Bean of the day
       </h1>
@@ -11,16 +11,13 @@
       <header>
         <img :src="bean.imageUrl" alt="" />
       </header>
-      <section>
-        <h2 style="margin: 0;">{{ bean.name }}</h2>
-        <ul class="bean__info">
+      <section class="bean__info">
+        <h3 class="bean__title">
+          {{ bean.name }} <span>Colour: {{ bean.colour }}</span>
+        </h3>
+        <ul>
           <li>
-            <span>Aroma</span>
             {{ bean.aroma }}
-          </li>
-          <li>
-            <span>Colour</span>
-            {{ bean.colour }}
           </li>
         </ul>
         <h3>
@@ -38,6 +35,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    // Declare for reactivity
     bean: {
       costPer100g: 0,
       name: "",
@@ -48,38 +46,61 @@ export default {
   },
   data() {
     return {
-      hideTimeout: 4000, //in ms
+      hideTimeout: 6000, //in ms
     };
   },
   watch: {
     // eslint-disable-next-line no-unused-vars
     isShow(newVal, oldVal) {
       if (newVal) {
-        // Send event to parent
+        // Send event to the calling component, to close the ad after specified timeout
         setTimeout(() => {
           this.$emit("closeAdvert");
         }, this.hideTimeout);
       }
     },
   },
-  methods: {
-    getCostPerGrams(grams) {
-      return this.costPer100g * grams;
-    },
-  },
 };
 </script>
 
 <style lang="scss" scoped>
-$bg: #e2e2e2;
+.advert {
+  &__title {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 1rem;
+    text-align: center;
+
+    svg {
+      color: hotpink;
+    }
+  }
+}
+
 .bean {
+  &__title {
+    margin: 0;
+
+    span {
+      font-size: 0.75em;
+      display: block;
+    }
+  }
+
   &__info {
     text-align: left;
-    list-style: none;
-    padding: 0;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-    li {
-      position: relative;
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        position: relative;
+      }
     }
   }
 
@@ -92,28 +113,18 @@ $bg: #e2e2e2;
       position: fixed;
       bottom: 0;
       padding: 1rem;
-      background: $bg;
+      background: #e2e2e2;
       border-radius: 15px 15px 0 0;
       position: fixed;
       left: 50%;
       transform: translate(-50%, 482px);
       transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
-
-      h1 {
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        padding-bottom: 1rem;
-        text-align: center;
-      }
     }
 
     img {
       width: 150px;
       height: 150px;
-    }
-
-    h2 {
-      text-transform: uppercase;
+      border-radius: 5px;
     }
   }
 }

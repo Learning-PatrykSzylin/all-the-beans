@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitForm" :action="postUrl" method="post" id="form">
+  <form @submit.prevent="submitForm" method="post" id="form">
     <ul>
       <li>
         <input
@@ -52,7 +52,6 @@ import axios from "axios";
 export default {
   data() {
     return {
-      postUrl: "https://localhost:5001/api/beans",
       // Declare form data in order to be reactive
       formData: {
         name: "",
@@ -66,7 +65,7 @@ export default {
   methods: {
     submitForm() {
       axios
-        .post("https://cf3febacfb3d.eu.ngrok.io/api/beans", {
+        .post(`${process.env.VUE_APP_API_ROOT_ENDPOINT}/beans`, {
           CostPer100g: parseFloat(this.formData.price),
           Name: this.formData.name,
           Colour: this.formData.colour,
@@ -85,8 +84,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$hotpink: #ff69b4;
-
 ul {
   li {
     list-style: none;
@@ -102,14 +99,14 @@ input {
   padding: 0.75rem 1rem;
 
   &[type="submit"] {
-    background: $hotpink;
+    background: hotpink;
     color: white;
     box-shadow: 0 0.75rem 0.5rem -0.5rem #000;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-      background: darken($hotpink, 20%);
+      background: darken(hotpink, 20%);
     }
   }
 }

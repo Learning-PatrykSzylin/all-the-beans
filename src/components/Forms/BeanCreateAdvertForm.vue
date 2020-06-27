@@ -1,11 +1,5 @@
 <template>
-  <form
-    @submit.prevent="AddAdvert"
-    ref="form"
-    action="postUrl"
-    method="post"
-    id="advert-form"
-  >
+  <form @submit.prevent="AddAdvert" method="post" id="advert-form">
     <section class="body">
       <div class="bean-picker">
         <h1>Pick a bean to advertise</h1>
@@ -52,40 +46,50 @@ export default {
     SelectBean(idx) {
       const beans = document.querySelectorAll("[data-beanIdx]");
 
-      // Reset selection
+      // Reset selection before selecting specific element
       beans.forEach((bean) => {
         bean.classList.remove("selected");
       });
 
-      // eslint-disable-next-line no-unused-vars
+      // NodeList prototype does not have .find() function
+      // So we are using ES6 spread operator to copy the contents of the beans into an array
+      // That way we can make use of find() function
+      // The copy will be deep copy since our data is not nested
       const selectedBean = [...beans].find(
         (x) => x.attributes["data-beanidx"].value == idx
       );
 
       selectedBean.classList.add("selected");
       this.selectedBeanId = this.availableBeans[idx].beanId;
-
-      console.log(beans);
     },
     AddAdvert() {
       axios
-        .post("https://cf3febacfb3d.eu.ngrok.io/api/beanadvert", {
+        .post(`${process.env.VUE_APP_API_ROOT_ENDPOINT}/beanadvert`, {
           beanId: this.selectedBeanId,
           date: this.date,
         })
         .then(() => {
-          console.log("GIHIIH");
+          console.log("Added advert");
         });
     },
   },
   async mounted() {
-    const response = await axios.get(
-      "https://cf3febacfb3d.eu.ngrok.io/api/beans"
-    );
+    let response = null;
 
-    this.availableBeans = response.data;
+    try {
+      // We want to load available beans from our database for admin's selection
+      response = await axios.get(
+        `${process.env.VUE_APP_API_ROOT_ENDPOINT}/beans`
+      );
+    } catch (err) {
+      // Would post to real database for storing logs
+      console.log("[BeanCreateAdvertForm] - Error... ", err);
+    } finally {
+      console.log("DATA");
 
-    console.log(this.availableBeans);
+      if (response != null && response != undefined)
+        this.availableBeans = response.data;
+    }
   },
 };
 </script>
@@ -144,6 +148,7 @@ $hotpink: #ff69b4;
       text-align: center;
       padding: 15px;
       cursor: pointer;
+      transition: all 0.2s ease;
 
       img {
         width: 50px;
@@ -151,7 +156,11 @@ $hotpink: #ff69b4;
         transition: all 0.2s ease;
       }
 
+      &:hover {
+        color: hotpink;
+      }
       &.selected {
+        color: hotpink;
         img {
           width: 75px;
           height: 75px;
