@@ -1,46 +1,51 @@
 <template>
-  <form @submit.prevent="AddAdvert" method="post" id="advert-form">
-    <section class="body">
-      <div class="bean-picker">
-        <h1>Pick a bean to advertise</h1>
-        <ul class="body__content">
-          <font-awesome-icon
-            id="icon--loading"
-            :icon="['fas', 'spinner']"
-            v-bind:style="iconStyle"
-            v-if="isLoading"
-          />
+  <section>
+    <nav class="crud-nav">
+      <button @click="removeAllAdverts">Remove All Adverts</button>
+    </nav>
+    <form @submit.prevent="AddAdvert" method="post" id="advert-form">
+      <section class="body">
+        <div class="bean-picker">
+          <h1>Pick a bean to advertise</h1>
+          <ul class="body__content">
+            <font-awesome-icon
+              id="icon--loading"
+              :icon="['fas', 'spinner']"
+              v-bind:style="iconStyle"
+              v-if="isLoading"
+            />
 
-          <p v-if="!isLoading">{{ GetNoBeansMessage }}</p>
+            <p v-if="!isLoading">{{ GetNoBeansMessage }}</p>
 
-          <li
-            v-for="(bean, idx) in availableBeans"
-            :key="idx"
-            :data-beanIdx="idx"
-            @click="SelectBean(idx)"
-          >
-            <img :src="bean.imageUrl" alt="" />
-            <h4>{{ bean.name }}</h4>
-          </li>
-        </ul>
-      </div>
+            <li
+              v-for="(bean, idx) in availableBeans"
+              :key="idx"
+              :data-beanIdx="idx"
+              @click="SelectBean(idx)"
+            >
+              <img :src="bean.imageUrl" alt="" />
+              <h4>{{ bean.name }}</h4>
+            </li>
+          </ul>
+        </div>
 
-      <div class="date-picker">
-        <h1>Pick a date of advertisment</h1>
-        <date-picker
-          v-model="date"
-          :inline="true"
-          :calendar-class="'body__content'"
-        ></date-picker>
-      </div>
-    </section>
-    <input
-      v-if="ShowSubmit"
-      type="submit"
-      value="Add Advert"
-      :class="{ disabled: IsSubmitDisabled }"
-    />
-  </form>
+        <div class="date-picker">
+          <h1>Pick a date of advertisment</h1>
+          <date-picker
+            v-model="date"
+            :inline="true"
+            :calendar-class="'body__content'"
+          ></date-picker>
+        </div>
+      </section>
+      <input
+        v-if="ShowSubmit"
+        type="submit"
+        value="Add Advert"
+        :class="{ disabled: IsSubmitDisabled }"
+      />
+    </form>
+  </section>
 </template>
 
 <script>
@@ -122,6 +127,18 @@ export default {
         rotation += 1;
       }, 0.01);
     },
+    removeAllAdverts() {
+      axios
+        .delete(`${process.env.VUE_APP_API_ROOT_ENDPOINT}/beanadvert`, {
+          crossdomain: true,
+        })
+        .then(() => {
+          this.$root.$emit("open-toast", {
+            title: "Deleted All Adverts",
+            message: `All adverts have successfully been cleared. `,
+          });
+        });
+    },
   },
   async mounted() {
     this.Loading();
@@ -155,6 +172,9 @@ $hotpink: #ff69b4;
     margin-top: 2rem;
     position: relative;
   }
+}
+.crud-nav {
+  padding: 1rem;
 }
 
 #icon--loading {
