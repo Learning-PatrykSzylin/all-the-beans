@@ -1,7 +1,7 @@
 <template>
   <div>
     <header>
-      <h1>Complete the form to add it to your bean collection</h1>
+      <h1>Fill in the form with relevant bean information</h1>
     </header>
     <main>
       <BeanCreateForm />

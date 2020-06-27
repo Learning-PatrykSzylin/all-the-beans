@@ -1,12 +1,18 @@
 <template>
-  <section class="home">
-    <header>Your Beans Admin Panel</header>
+  <section class="admin">
+    <header>
+      <h1>Welcome to your Bean's admin panel</h1>
+      <p>Please choose what you'd like to do using the following links</p>
+    </header>
     <nav>
-      <router-link to="/admin">Admin Panel</router-link> |
-      <router-link to="/admin/beancreate">Create</router-link>
-      <router-link to="/admin/createad">Create Ad</router-link>
+      <router-link to="/admin/beancreate"
+        >Add a new bean to the store</router-link
+      >
+      <router-link to="/admin/createad"
+        >Create an advert for a specific day</router-link
+      >
     </nav>
-    <section class="form">
+    <section class="admin__content">
       <router-view></router-view>
     </section>
   </section>
@@ -17,14 +23,22 @@
 
 export default {
   name: "Home",
-  components: {},
-  data() {
-    return {
-      beans: [],
-    };
-  },
-  async mounted() {
-    // this.beans = await axios.get("https://772547025b40.ngrok.io/api/beans");
-  },
 };
 </script>
+
+<style lang="scss" scoped>
+a {
+  padding: 15px;
+}
+
+.admin {
+  margin-top: 2rem;
+
+  &__content {
+    max-width: 1152px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 6rem;
+  }
+}
+</style>
