@@ -11,6 +11,8 @@
             v-if="isLoading"
           />
 
+          <p v-if="!isLoading">{{ GetNoBeansMessage }}</p>
+
           <li
             v-for="(bean, idx) in availableBeans"
             :key="bean.beanId"
@@ -32,8 +34,12 @@
         ></date-picker>
       </div>
     </section>
-
-    <input type="submit" value="Add Advert" />
+    <input
+      v-if="ShowSubmit"
+      type="submit"
+      value="Add Advert"
+      :class="{ disabled: IsSubmitDisabled }"
+    />
   </form>
 </template>
 
@@ -45,7 +51,7 @@ export default {
     return {
       date: null,
       availableBeans: [],
-      selectedBeanId: -1,
+      selectedBean: {},
       isLoading: true,
       iconStyle: {
         transform: "rotateZ(180deg)",
@@ -53,9 +59,24 @@ export default {
       },
     };
   },
+  computed: {
+    GetNoBeansMessage() {
+      return this.availableBeans.length > 0
+        ? ""
+        : "Please first add beans to your database first. They will show up here.";
+    },
+    ShowSubmit() {
+      return this.availableBeans.length > 0;
+    },
+    IsSubmitDisabled() {
+      return this.selectedBean.beanId == -1 || this.date == null;
+    },
+  },
   methods: {
     // eslint-disable-next-line no-unused-vars
     SelectBean(idx) {
+      this.selectedBean.beanId = -1;
+
       const beans = document.querySelectorAll("[data-beanIdx]");
 
       // Reset selection before selecting specific element
@@ -72,16 +93,22 @@ export default {
       );
 
       selectedBean.classList.add("selected");
-      this.selectedBeanId = this.availableBeans[idx].beanId;
+      this.selectedBean = this.availableBeans[idx];
+      console.log("beans", this.availableBeans);
+
+      this.lastClickedIdx = idx;
     },
     AddAdvert() {
       axios
         .post(`${process.env.VUE_APP_API_ROOT_ENDPOINT}/beanadvert`, {
-          beanId: this.selectedBeanId,
+          beanId: this.selectedBean.beanId,
           date: this.date,
         })
         .then(() => {
-          console.log("Added advert");
+          this.$root.$emit("open-toast", {
+            title: "New advert confirmation",
+            message: `Created an advert for ${this.selectedBean.name}. This advert will show on ${this.date}`,
+          });
         });
     },
     // This function is called when component loads and spins the loading icon
@@ -156,6 +183,12 @@ $hotpink: #ff69b4;
 
     &:hover {
       background: darken($hotpink, 20%);
+    }
+
+    &.disabled {
+      pointer-events: none;
+      background-color: gray;
+      text-decoration: line-through;
     }
   }
 

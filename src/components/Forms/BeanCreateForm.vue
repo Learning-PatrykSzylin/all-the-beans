@@ -7,6 +7,7 @@
           v-model="formData.name"
           type="text"
           placeholder="Name of the bean"
+          required
         />
       </li>
       <li>
@@ -15,6 +16,7 @@
           v-model="formData.aroma"
           type="text"
           placeholder="Aroma of the bean"
+          required
         />
       </li>
       <li>
@@ -23,6 +25,7 @@
           v-model="formData.colour"
           type="text"
           placeholder="Colour"
+          required
         />
       </li>
       <li>
@@ -31,6 +34,7 @@
           v-model="formData.imageUrl"
           type="url"
           placeholder="Link to the image"
+          required
         />
       </li>
       <li>
@@ -40,6 +44,7 @@
           type="number"
           step="0.01"
           placeholder="Price"
+          required
         />
       </li>
     </ul>
@@ -74,6 +79,10 @@ export default {
         })
         .then(() => {
           console.log("Posted...");
+          this.$root.$emit("open-toast", {
+            title: "Added new bean",
+            message: `New bean has been added to the database.`,
+          });
         })
         .catch((err) => {
           console.log("error... ", err);

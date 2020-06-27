@@ -1,5 +1,6 @@
 <template>
   <section class="admin">
+    <ToastMessage />
     <header>
       <h1>Welcome to your Bean's admin panel</h1>
       <p>Please choose what you'd like to do using the following links</p>
@@ -19,8 +20,12 @@
 </template>
 
 <script>
+const ToastMessage = () => import("@/components/ToastMessage.vue");
 export default {
   name: "Home",
+  components: {
+    ToastMessage,
+  },
 };
 </script>
 
