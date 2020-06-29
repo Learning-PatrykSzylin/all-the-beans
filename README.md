@@ -5,6 +5,9 @@ The API endpoint is configured to use the .net core app hosted on heroku. Howeve
 
 To do that, change the ``` .env ``` file at the root of the project to point to the IP of your local instance of the API.
 
+## Admin Page
+To interact with the database, please go to ```/admin```. This page will provide with navigation to add beans and beanadverts.
+
 ## Project setup
 ```
 npm install
