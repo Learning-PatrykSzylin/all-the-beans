@@ -1,5 +1,10 @@
 # all-the-beans
 
+## API endpoint
+The API endpoint is configured to use the .net core app hosted on heroku. However, it can be changed to point to local instance of the API.
+
+To do that, change the ``` .env ``` file at the root of the project to point to the IP of your local instance of the API.
+
 ## Project setup
 ```
 npm install
